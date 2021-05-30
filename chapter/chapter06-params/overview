@@ -1,0 +1,56 @@
+함수 인수를 변경 하는 계획
+간결하면서 유연성을 제공하는 매개변수를 생성하는 방법
+
+tip-28
+매개변수 기본값 추가
+
+ - 항상 순서를 지켜야 한다
+
+ - 기본값 사용에 주의 할 점은 undefined 는 적용되나 null 의 경우에는 기본값을 적용하지 않는다.
+
+
+해체 할당을 이용한 객체 정보 가져오기
+
+ - 해체 할당은 let 으로 변수 할당
+
+ - 해체 할당과 동시에 기본값 설정
+    const {photographer = 'Anonymous', title } = landscape;
+
+ - 나머지 해체 할당, 이 경우 spread operation 이라고 하지 않고 rest parameters 라고 함
+    const {photographer = 'Anonymous', title, ...additional } = landscape;
+
+ - key 이름 변경 (title 을 project 로 변경)
+    const {photographer = 'Anonymous', title : project, ...additional } = landscape;
+
+ - 배열에 담긴 순서가 정보의 일부분인 경우 해체 할당을 이용 새로운 key 값에 할당
+    const { location } = landscape;
+    const [latitude, longitude] = location;
+    => const { photographer = 'Anonymous', title : project, location: [latitude, longitude], ...additional } = landscape;
+
+ - 해체 할당의 유일한 단점은 key-value 또는 클래스의 인스턴스인 객체({})에서만 사용 가능
+
+해체 할당과 매개변수 결합 => 정보를 새로운 객체로 결합 => 사용 가능한 번들에서 많은 정보를 공유하는 return 작성
+인수의 수를 예상하기 어려운 경우에 함수를 만드는 방법
+
+
+
+tip-31
+나머지 매개변수를 이용 -> 개수를 알 수 없는 다수의 매개변수를 전달하는 방법
+
+나머지 인수를 사용하는 이유
+
+ - 인수를 배열로 다루는 것을 다른 개발자들에게 알려야 하는 경우
+
+ - 코드 디버깅에 좋은 방법 제공 (확인 하기 어려운 매개변수를 찾는데 유용)
+
+ - 함수 간에 속성을 전달하면서 해당 속성을 조작할 필요가 없을 떄 사용 (모달창세서 변경 사항을 저장할 때 함수로 정보를 갱신하면서 동시에 창을 닫을 떄)
+
+    function applyChanges(...args) {
+      updateAccount(...args);
+      closeModal();
+    }
+ - 펼침 연산자와 마찬가지로 부수 효과를 제거하면서 일반적인 배열 메서드를 만들 떄 사용
+
+나머지 매개변수의 단점 -> 언제나 마지막 인수에만 사용
+    const [...beginning, last ] = queue;
+    // SyntaxError : Rest element must be last element
